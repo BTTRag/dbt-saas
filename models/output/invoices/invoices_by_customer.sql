@@ -1,0 +1,20 @@
+with 
+
+invoices_by_customer as (
+  select
+    customer_id,
+    date_trunc('month',date) as month,
+    sum(total) as total
+  from
+    {{ ref('invoices') }}
+  group by
+    customer_id,
+    date_trunc('month',date)
+)
+
+select 
+  *,
+  row_number() over (partition by customer_id order by month asc)   as asc_row,
+  row_number() over (partition by customer_id order by month desc)  as desc_row 
+from 
+  invoices_by_customer

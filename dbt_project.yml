@@ -1,0 +1,28 @@
+name: 'dbt_saas'
+version: '0.1'
+
+source-paths: ["models"]      # paths with source code to compile
+analysis-paths: ["analysis"]  # path with analysis files which are compiled, but not run
+target-path: "target"         # path for compiled code
+clean-targets: ["target"]     # directories removed by the clean task
+test-paths: ["test"]          # where to store test results
+data-paths: ["data"]          # load CSVs from this directory with `dbt seed`
+
+# specify per-model configs
+models:
+  dbt_saas:
+
+    stripe:
+      materialized: table
+      enabled: true
+      vars: 
+        invoices_table: 'production.vero_stripe_redo.stripe_invoices'
+        plans_table: 'production.vero_stripe_redo.stripe_plans'
+        charges_table: 'production.vero_stripe_redo.stripe_charges'
+        customers_table: 'production.vero_stripe_redo.stripe_customers'
+        subscriptions_table: 'production.vero_stripe_redo.stripe_subscriptions'
+        invoice_line_items_table: 'vero_stripe_redo.stripe_invoices__lines__data'
+        
+    invoices:
+      materialized: table
+      enabled: true    
